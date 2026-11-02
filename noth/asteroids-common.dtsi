@@ -13,9 +13,6 @@
 	usb-repeater = <&pmiv0104_eusb2_repeater>;
 };
 
-&mem_offline {
-	status = "disabled";
-};
 
 &pm7550_l22 {
 	regulator-min-microvolt = <3300000>;
@@ -156,14 +153,15 @@
 &reserved_memory {
 	ramoops_mem: ramoops_region@0x81f20000 {
 		compatible = "ramoops";
+		linux,reserve-contiguous-region;
+		linux,reserve-region;
+		linux,remove-completely;
+		no-map;
 		reg = <0x0 0x81f20000 0x0 0x400000>;
 		size = <0x400000>;
 		console-size = <0x200000>;
 		pmsg-size = <0x200000>;
 		mem-type = <2>;
-		linux,reserve-contiguous-region;
-		linux,reserve-region;
-		linux,remove-completely;
 	};
 };
 
@@ -176,7 +174,7 @@
 
 	bootloader_log {
 		compatible = "nothing,bootloader_log";
-		memory-region = <&uefi_log_mem>;
+		memory-region = <&xbl_dtlog_mem>, <&uefi_log_mem>;
 	};
 
 	cable_detect {
@@ -214,6 +212,11 @@
 			compatible = "nothing,msm-imem-restart_info";
 			reg = <0xbf0 0x64>;
 			info_size = <0x64>;
+		};
+
+		lba_addr@b80 {
+			compatible = "nothing,lba_addr";
+			reg = <0xb80 0x8>;
 		};
 	};
 
